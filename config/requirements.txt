@@ -1,0 +1,11 @@
+configparser==3.5.0b2
+facebookads==2.3.1
+Flask==0.10.1
+itsdangerous==0.24
+Jinja2==2.7.3
+MarkupSafe==0.23
+mock==1.0.1
+requests==2.6.0
+six==1.9.0
+virtualenv==12.0.7
+Werkzeug==0.10.4

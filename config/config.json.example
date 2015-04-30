@@ -1,0 +1,15 @@
+{
+  "app_id": "",
+  "app_secret": "",
+  "access_token": "",
+  "act_id" : {
+    "us": "",
+    "tw": "",
+    "kr": ""
+  },
+  "page_id" : {
+    "us": "",
+    "tw": "",
+    "kr": ""
+  }
+}

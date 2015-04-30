@@ -1,0 +1,5 @@
+env
+*.pyc
+config/config.json
+upload/*
+!.gitkeep
