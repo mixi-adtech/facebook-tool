@@ -43,6 +43,7 @@ pip install -r config/requirements.txt
 ```
 
 `config/config.json.example` に有効な値を入れる  
+configは複数の広告アカウントに対応出来る仕組みとなっている  
 
 `config/config.json.example` を `config/config.json` にリネーム
 ```
