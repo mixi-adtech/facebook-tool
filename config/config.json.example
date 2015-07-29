@@ -1,15 +1,33 @@
 {
-  "app_id": "",
+  "api_app_id": "",
   "app_secret": "",
   "access_token": "",
   "act_id" : {
+    "jp": "",
     "us": "",
     "tw": "",
     "kr": ""
   },
   "page_id" : {
+    "jp": "",
     "us": "",
     "tw": "",
     "kr": ""
+  },
+  "link_url" : {
+    "jp": "",
+    "us": "",
+    "tw": "",
+    "kr": ""
+  },
+  "app_id" : {
+    "jp": "",
+    "us": "",
+    "tw": "",
+    "kr": ""
+  },
+  "user_os" : {
+    "ios" : "",
+    "android" : ""
   }
 }

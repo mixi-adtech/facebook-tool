@@ -1,5 +1,5 @@
 configparser==3.5.0b2
-facebookads==2.3.1
+facebookads==2.4.1
 Flask==0.10.1
 itsdangerous==0.24
 Jinja2==2.7.3

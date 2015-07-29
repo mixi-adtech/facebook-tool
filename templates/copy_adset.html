@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <title>facebook tool</title>
+    </head>
+    <body>
+        <div class="page-header container">
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li class="active">Copy AdSet</li>
+            </ol>
+            <h1>Facebook Tool <small>Copy AdSet</small></h1>
+        </div>
+        <form action="/copy_adset/select_target" method="POST" enctype="multipart/form-data">
+            <div class="container">
+                <table class="table table-bordered">
+                    <tr>
+                        <th class="col-md-2">広告アカウントの選択</th>
+                        <td>
+                            <select class="form-control" name="adset_target" id="adset_target" required>
+                                <option selected></option>
+                                <option value="jp">国内出稿用</option>
+                                <option value="us">北米出稿用</option>
+                                <option value="tw">台湾出稿用</option>
+                                <option value="kr">韓国出稿用</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>アカウント</th>
+                        <td>
+                            <input class="form-control" type="text" name="account" id="account" value="" readonly required />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>対象広告セットの選択</th>
+                        <td id="adsets"></td>
+                    </tr>
+                </table>
+                <input type="submit" class="btn btn-primary btn-lg" value="submit" id="submit" disabled />
+            </div>
+        </form>
+        <script type="text/javascript" src="/static/js/select_copy_adset_target.js"></script>
+        <script type="text/javascript" src="/static/js/select_template.js"></script>
+    </body>
+</html>

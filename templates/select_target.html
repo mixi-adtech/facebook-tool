@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <title>facebook tool</title>
+    </head>
+    <body>
+        <div class="page-header container">
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li><a href="/copy_adset">Copy AdSet</a></li>
+                <li class="active">Select Target</li>
+            </ol>
+            <h1>Facebook Tool <small>Copy AdSet</small></h1>
+        </div>
+        <form action="/copy_adset/add" method="POST" enctype="multipart/form-data" id="form_target">
+            <div class="container" id="form_main">
+                <table class="table table-bordered">
+                    <tr class="warning">
+                        <th class="col-md-2">コピーする広告セット</th>
+                        <td colspan="2">{{params.adset.name}} - {{params.campaign_name}}</td>
+                    </tr>
+                    <tr class="active">
+                        <th class="col-md-2" rowspan="7">ターゲット</th>
+                        <th>カスタムオーディエンス</th>
+                        <td>
+                            {% for custom in params.adset.targeting.custom_audiences %}
+                            {{custom.name}}
+                            <br />
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr class="active">
+                        <th>除外カスタムオーディエンス</th>
+                        <td>
+                            {% for custom in params.adset.targeting.excluded_custom_audiences %}
+                            {{custom.name}}
+                            <br />
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr class="active">
+                        <th>興味・関心(flexible targeting)</th>
+                        <td>
+                            {% for flexible in params.adset.targeting.flexible_spec %}
+                            {% for interest in flexible.interests %}
+                            {{interest.name}}
+                            <br />
+                            {% endfor %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>地域</th>
+                        <td>
+                            {% for country in params.country_list %}
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="countries" value={{country.name}} {% if country.is_checked %}checked{% endif %}>{{country.name}}
+                            </label>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>年齢</th>
+                        <td>
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <select class="form-control" name="age_min" id="age_min" required>
+                                        {% for age in params.age_range %}
+                                        <option value={{age}} {% if params.adset.targeting.age_min == age %} selected {% endif %}>{{age}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                    〜
+                                <div class="form-group">
+                                    <select class="form-control" name="age_max" id="age_max" required>
+                                        {% for age in params.age_range %}
+                                        <option value={{age}} {% if params.adset.targeting.age_max == age %} selected {% endif %}>{{age}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>性別</th>
+                        <td>
+                            <select class="form-control" name="gender" id="gender" required>
+                                <option value="0" {% if params.gender==0 %} selected{% endif %}>全て</option>
+                                <option value="1" {% if params.gender==1 %} selected{% endif %}>男性</option>
+                                <option value="2" {% if params.gender==2 %} selected{% endif %}>女性</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>OS</th>
+                        <td>
+                            <select class="form-control" name="os" id="os" required>
+                                <option value=""></option>
+                                <option value="android">Android</option>
+                                <option value="ios">iOS</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>コピー先の<br>キャンペーンを選択</th>
+                        <td colspan="2">
+                            <select class="form-control" name="campaign_id" id="campaign_id" required>
+                                <option value=""></option>
+                                {% for campaign in params.campaigns%}
+                                    <option value="{{campaign.id}}">{{campaign.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>広告セット名</th>
+                        <td colspan="2">
+                            <input class="form-control" type="text" id="adset_name" name="adset_name" value={{params.adset.name}} required />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>ステータス</th>
+                        <td colspan="2">
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-default active">
+                                    <input type="radio" name="status" value="PAUSED" checked />PAUSED
+                                </label>
+                                <label class="btn btn-default">
+                                    <input type="radio" name="status" value="ACTIVE" />ACTIVE
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <input type="hidden" name="account" value="{{params.account}}">
+                <input type="hidden" name="adset_id" value="{{params.adset.id}}">
+                <input type="submit" class="btn btn-primary btn-lg" value="submit" id="submit">
+            </div>
+        </form>
+        <script type="text/javascript" src="/static/js/select_target_validate.js"></script>
+    </body>
+</html>

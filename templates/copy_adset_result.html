@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <title>facebook tool</title>
+    </head>
+    <body>
+        <div class="page-header container">
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li><a href="/copy_adset">Copy AdSet</a></li>
+                <li class="active">Select Target</li>
+            </ol>
+            <h1>Facebook Tool <small>Copy AdSet</small></h1>
+        </div>
+        <div class="container">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title" id="panel-title">SUCCESS</h3>
+                </div>
+                <div class="panel-body">
+                    広告セットのコピーが完了しました。
+                </div>
+            </div>
+            <table class="table table-bordered">
+                <tr>
+                    <th class="col-md-2">キャンペーン</th>
+                    <td>{{params.campaign.name}}</td>
+                </tr>
+                <tr>
+                    <th class="col-md-2">広告セット</th>
+                    <td>{{params.adset.name}}</td>
+                </tr>
+                <tr>
+                    <th class="col-md-2">作成した広告</th>
+                    <td>{{params.adgroups|length}}</td>
+                </tr>
+            </table>
+            <p><a class="btn btn-primary btn-lg" href="/copy_adset" role="button">トップへ戻る</a></p>
+        </div>
+    </body>
+</html>
