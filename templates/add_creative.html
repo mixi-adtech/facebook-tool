@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+<title>facebook tool</title>
+</head>
+<body>
+<div class="page-header container">
+    <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li class="active">Add Creative</li>
+    </ol>
+    <h1>Facebook Tool <small>Add Creative</small></h1>
+</div>
+<form action="/add_creative/add" method="POST" enctype="multipart/form-data">
+<div class="container">
+    {% if error %}
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <h3 class="panel-title">不正な入力です</h3>
+            </div>
+            <div class="panel-body">
+                再度お試し下さい
+            </div>
+        </div>
+    {% endif %}
+    <table class="table table-bordered">
+        <tr>
+            <th class="col-md-2">クリエイティブ名</th>
+            <td><input class="form-control" type="text" id="creative_name" name="creative_name" value="" required autofocus /></td>
+        </tr>
+        <tr>
+            <th>対象広告セットの選択</th>
+            <td>
+                <select class="form-control" name="adset_target" id="adset_target" required>
+                    <option selected></option>
+                    <option value="jp_android">国内出稿用(Android)</option>
+                    <option value="us_android">北米出稿用(Android)</option>
+                    <option value="tw_android">台湾出稿用(Android)</option>
+                    <option value="kr_android">韓国出稿用(Android)</option>
+                    <option value="jp_ios">国内出稿用(iOS)</option>
+                    <option value="us_ios">北米出稿用(iOS)</option>
+                    <option value="tw_ios">台湾出稿用(iOS)</option>
+                    <option value="kr_ios">韓国出稿用(iOS)</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>アカウント</th>
+            <td><input class="form-control" type="text" name="account" id="account" value="" readonly required /></td>
+        </tr>
+        <tr>
+            <th>OS</th>
+            <td><input class="form-control" type="text" name="os" id="os" value="" readonly required /></td>
+        </tr>
+        <tr>
+            <th>見出し</th>
+            <td><input class="form-control" type="text" name="title" id="title" value="" required /></td>
+        </tr>
+        <tr>
+            <th>テキスト</th>
+            <td><textarea class="form-control" id="message" name="message" rows="4" required></textarea></td>
+        </tr>
+        <tr>
+            <th>ステータス</th>
+            <td>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default active">
+                        <input type="radio" name="status" value="PAUSED" checked />PAUSED
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="radio" name="status" value="ACTIVE" />ACTIVE
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th>画像</th>
+            <td>
+                <input type="file" id="filename" name="filename" accept="image/jpeg,image/png,image/gif" required />
+                <img src="" id="preview" style="display:none;" />
+            </td>
+        </tr>
+        <tr>
+            <th>広告セット</th>
+            <td id="adsets"></td>
+        </tr>
+    </table>
+    <input type="submit" class="btn btn-primary btn-lg" value="submit" id="submit" disabled />
+</div>
+</form>
+<script type="text/javascript" src="/static/js/select_adset_target.js"></script>
+<script type="text/javascript" src="/static/js/show_preview.js"></script>
+</body>
+</html>

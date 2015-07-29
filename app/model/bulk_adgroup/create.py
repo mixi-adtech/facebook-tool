@@ -1,3 +1,4 @@
+from app.common.config import Config
 from facebookads import FacebookAdsApi
 from facebookads.specs import ObjectStorySpec, LinkData
 from facebookads.objects import (
@@ -10,14 +11,10 @@ import json, os, pprint
 
 pp = pprint.PrettyPrinter(indent=4)
 this_dir = os.path.dirname(__file__)
-config_filename = os.path.join(this_dir, '../../config/config.json')
-
-config_file = open(config_filename)
-config = json.load(config_file)
-config_file.close()
+config = Config().get_config()
 
 FacebookAdsApi.init(
-    config['app_id'],
+    config['api_app_id'],
     config['app_secret'],
     config['access_token'],
 )
@@ -34,10 +31,11 @@ class AdCreativeModel:
 
         ### Upload an image to an account.
         img = AdImage(parent_id=parent_id)
-        img[AdImage.Field.filename] = os.path.join(this_dir, '../../upload/'+ self.filename)
+        img[AdImage.Field.filename] = os.path.join(this_dir, '../../../upload/'+ self.filename)
         img.remote_create()
         print("**** DONE: Image uploaded:")
-        pp.pprint(img)  # The image hash can be found using img[AdImage.Field.hash]
+        pp.pprint(img)
+        # The image hash can be found using img[AdImage.Field.hash]
 
         ### Create link data
         link_data = LinkData()
@@ -47,7 +45,8 @@ class AdCreativeModel:
         call_to_action = {'type': 'INSTALL_MOBILE_APP'}
         call_to_action['value'] = {
             'link': link_url,
-            'link_title': self.param['title']
+            'link_title': self.param['title'],
+            'application': config['app_id'][self.param['account']],
         }
         link_data[LinkData.Field.call_to_action] = call_to_action
 
@@ -77,6 +76,12 @@ class AdCreativeModel:
                 AdGroup.Field.creative: {
                     AdGroup.Field.Creative.creative_id: creative.get_id_assured(),
                 },
+                AdGroup.Field.tracking_specs: [
+                    {
+                        'action.type': ['mobile_app_install'],
+                        'application': config['app_id'][self.param['account']],
+                    },
+                ],
             })
             ad.remote_create()
             ads.append(ad)

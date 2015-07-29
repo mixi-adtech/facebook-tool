@@ -12,7 +12,7 @@ $('#adset_target').change(function() {
     $('#title').focus();
     $.ajax({
         type: 'GET',
-        url: '/api/adset/' + account + '/' + os,
+        url: '/add_creative/api/adset/' + account + '/' + os,
         error: function() {
             $('#adsets').empty();
             $('#adsets').append('APIのアクセス制限のため失敗しました。しばらくたってからもう一度選択して下さい。');
@@ -27,7 +27,7 @@ $('#adset_target').change(function() {
                 for (var i=0;i<data.result.length;i++) {
                     var ad = data.result[i];
                     table.append('<tr><td><input checked type="checkbox" name="adset_ids" value="' + ad.id + '" id="chk_' + ad.id + '"></td><td>' + ad.campaign_name + '</td><td>' + ad.name + '</td><td>' + ad.creative_count + '</td></tr>');
-                    if (parseInt(ad.creative_count, 10) < 50) {
+                    if (parseInt(ad.creative_count, 10) < 50 && ad.campaign_objective == 'MOBILE_APP_INSTALLS') {
                         table.find('#chk_' + ad.id).on('change', function() {
                             var checked = $('input[name="adset_ids"]:checked').map(function() {
                                 return $(this).val();
