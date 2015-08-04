@@ -2,10 +2,12 @@ from app.common.config import Config
 from facebookads.api import FacebookAdsApi
 from facebookads.specs import ObjectStorySpec, LinkData, AttachmentData
 from facebookads.objects import (
+    AdAccount,
     AdSet,
     AdCampaign,
     AdCreative,
     AdGroup,
+    CustomAudience
 )
 
 import json, time, pprint, copy
@@ -58,8 +60,7 @@ class CopyAdSet:
                 AdGroup.Field.status : ['ACTIVE']
             }
         )
-        pp.pprint(adgroups)
-
+        # pp.pprint(adgroups)
 
         object_store_url = adset['promoted_object']['object_store_url'].replace('https://','http://')
         if link_url != object_store_url:
@@ -69,11 +70,37 @@ class CopyAdSet:
 
     def same_os_copy(self, campaign, adset, adgroups):
         parent_id = config['act_id'][self.param['account']]
+        account = AdAccount(parent_id)
+        custom_audiences = account.get_custom_audiences(
+            fields = [
+                CustomAudience.Field.name,
+            ],
+            params={'limit':100}
+        )
+
+        copy_custom_audience = []
+        copy_excluded_custom_audience = []
+        for i in range(0,len(custom_audiences)):
+            custom_audience = custom_audiences[i]
+            if custom_audience['id'] in self.param.getlist('custom_audiences'):
+                audience = {
+                    'id' : custom_audience['id'],
+                    'name' : custom_audience['name']
+                }
+                copy_custom_audience.append(audience)
+            if custom_audience['id'] in self.param.getlist('excluded_custom_audiences'):
+                excluded_audience = {
+                    'id' : custom_audience['id'],
+                    'name' : custom_audience['name']
+                }
+                copy_excluded_custom_audience.append(excluded_audience)
 
         copy_targeting = copy.deepcopy(adset['targeting'])
         copy_targeting['age_max'] = self.param['age_max']
         copy_targeting['age_min'] = self.param['age_min']
         copy_targeting['geo_locations']['countries'] = self.param.getlist('countries')
+        copy_targeting['custom_audiences'] = copy_custom_audience
+        copy_targeting['excluded_custom_audiences'] = copy_excluded_custom_audience
 
         # Defaults to all. Do not specify 0.
         if(self.param['gender']):
@@ -140,6 +167,31 @@ class CopyAdSet:
         parent_id = config['act_id'][self.param['account']]
         link_url = config['link_url'][self.param['account']][self.param['os']]
 
+        account = AdAccount(parent_id)
+        custom_audiences = account.get_custom_audiences(
+            fields = [
+                CustomAudience.Field.name,
+            ],
+            params={'limit':100}
+        )
+
+        copy_custom_audience = []
+        copy_excluded_custom_audience = []
+        for i in range(0,len(custom_audiences)):
+            custom_audience = custom_audiences[i]
+            if custom_audience['id'] in self.param.getlist('custom_audiences'):
+                audience = {
+                    'id' : custom_audience['id'],
+                    'name' : custom_audience['name']
+                }
+                copy_custom_audience.append(audience)
+            if custom_audience['id'] in self.param.getlist('excluded_custom_audiences'):
+                excluded_audience = {
+                    'id' : custom_audience['id'],
+                    'name' : custom_audience['name']
+                }
+                copy_excluded_custom_audience.append(excluded_audience)
+
         copy_promoted_object = copy.deepcopy(adset['promoted_object'])
         copy_promoted_object['object_store_url'] = link_url
 
@@ -148,6 +200,12 @@ class CopyAdSet:
         copy_targeting['age_max'] = self.param['age_max']
         copy_targeting['age_min'] = self.param['age_min']
         copy_targeting['geo_locations']['countries'] = self.param.getlist('countries')
+        copy_targeting['custom_audiences'] = copy_custom_audience
+        copy_targeting['excluded_custom_audiences'] = copy_excluded_custom_audience
+
+        # Default to all.
+        if 'user_device' in copy_targeting:
+            del copy_targeting['user_device']
 
         # Defaults to all. Do not specify 0.
         if(self.param['gender']):
@@ -238,7 +296,7 @@ class CopyAdSet:
             print("*** DONE: Copy Creative ***")
             pp.pprint(copy_creative)
 
-            time.sleep(3)
+            time.sleep(2)
 
             copy_adgroup = AdGroup(parent_id=parent_id)
             copy_adgroup.update({
@@ -253,7 +311,7 @@ class CopyAdSet:
             copy_adgroup.remote_create()
             print("*** DONE: Copy AdGroup ***")
             pp.pprint(copy_adgroup)
-            time.sleep(3)
+            time.sleep(2)
 
         result = {
             'adset' : copy_adset,

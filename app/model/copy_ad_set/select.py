@@ -6,6 +6,7 @@ from facebookads.objects import (
     AdCampaign,
     AdCreative,
     AdGroup,
+    CustomAudience,
 )
 
 import json, time, pprint
@@ -59,7 +60,7 @@ class AdSetModel:
                         'campaign_name': campaign['name']
                     })
                     break
-        return ads
+        return sorted(ads, key=lambda ad: ad['campaign_name'] + ad['name'])
 
 class SelectTarget:
     def __init__(self, param):
@@ -113,6 +114,45 @@ class SelectTarget:
             }
             country_list.append(countries)
 
+        custom_audiences = account.get_custom_audiences(
+            fields=[
+                CustomAudience.Field.name,
+            ],
+            params={'limit':1000}
+        );
+
+        audience_list = []
+        for i in range(0,len(custom_audiences)):
+            audience = custom_audiences[i]
+            is_checked = 0
+            if('custom_audiences' in adset['targeting']):
+                for default_audience in adset['targeting']['custom_audiences']:
+                    if (audience['id'] == default_audience['id']):
+                        is_checked = 1
+                        break
+            audiences = {
+                'name' : audience['name'],
+                'id' : audience['id'],
+                'is_checked' : is_checked,
+            }
+            audience_list.append(audiences)
+
+        excluded_list = []
+        for i in range(0,len(custom_audiences)):
+            audience = custom_audiences[i]
+            is_checked = 0
+            if('excluded_custom_audiences' in adset['targeting']):
+                for default_excluded in adset['targeting']['excluded_custom_audiences']:
+                    if (audience['id'] == default_excluded['id']):
+                        is_checked = 1
+                        break
+            excludeds = {
+                'name' : audience['name'],
+                'id' : audience['id'],
+                'is_checked' : is_checked,
+            }
+            excluded_list.append(excludeds)
+
         result = {
             'account' : self.param['account'],
             'adset' : adset,
@@ -120,7 +160,9 @@ class SelectTarget:
             'gender' : gender,
             'age_range' : age_range,
             'campaign_name' : campaign_name,
-            'country_list' : country_list
+            'country_list' : country_list,
+            'audience_list' : audience_list,
+            'excluded_list' : excluded_list,
         }
 
         return result
