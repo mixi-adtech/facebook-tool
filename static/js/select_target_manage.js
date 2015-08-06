@@ -12,3 +12,7 @@ $('#form_target').submit(function(){
         return false;
     }
 });
+
+$(".custom_audience_multiple").select2();
+$(".excluded_custom_audience_multiple").select2();
+$(".country_multiple").select2();
