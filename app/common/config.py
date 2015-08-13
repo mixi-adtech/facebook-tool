@@ -1,6 +1,9 @@
-import json, os
+import json
+import os
+
 
 class Config:
+
     def __init__(self):
         self.set_config()
 
