@@ -4,11 +4,9 @@ from facebookads.objects import (
     AdAccount,
     AdSet,
     AdCampaign,
-    AdCreative,
-    AdGroup,
 )
 
-import json, os, pprint
+import pprint
 
 pp = pprint.PrettyPrinter(indent=4)
 config = Config().get_config()
@@ -18,6 +16,7 @@ FacebookAdsApi.init(
     config['app_secret'],
     config['access_token'],
 )
+
 
 class AdSetModel:
     def __init__(self, act_id, link_url):
@@ -33,9 +32,9 @@ class AdSetModel:
                 AdSet.Field.campaign_group_id,
                 AdSet.Field.promoted_object
             ],
-            params = {
-                'campaign_status' : ['ACTIVE'],
-                'limit':100
+            params={
+                'campaign_status': ['ACTIVE'],
+                'limit': 100
             }
         )
 
@@ -46,26 +45,28 @@ class AdSetModel:
                 AdCampaign.Field.objective
             ],
             params={
-                'campaign_group_status':['ACTIVE']
+                'campaign_group_status': ['ACTIVE']
             }
-        );
+        )
 
         ads = []
         for adset in adsets:
-            if not 'promoted_object' in adset:
+            if 'promoted_object' not in adset:
                 continue
-            object_store_url = adset['promoted_object']['object_store_url'].replace('https://', 'http://')
-            if object_store_url != self.link_url:
+            object_store_url = adset['promoted_object']['object_store_url']
+            replace_url = object_store_url.replace('https://', 'http://')
+
+            if replace_url != self.link_url:
                 continue
-            creatives = adset.get_ad_creatives(params={'limit':50})
-            for i in range(0,len(campaigns)):
+            creatives = adset.get_ad_creatives(params={'limit': 50})
+            for i in range(0, len(campaigns)):
                 campaign = campaigns[i]
                 if adset['campaign_group_id'] == campaign['id']:
                     ads.append({
                         'id': adset['id'],
                         'name': adset['name'],
                         'campaign_name': campaign['name'],
-                        'campaign_objective' : campaign['objective'],
+                        'campaign_objective': campaign['objective'],
                         'creative_count': len(creatives),
                     })
                     break
