@@ -8,7 +8,7 @@ $('#filename').change(
         var file = $(this).prop('files')[0];
         var fr = new FileReader();
         fr.onload = function() {
-            $('#preview').attr('src', fr.result ).css('display','inline');
+            $('#preview').attr('src', fr.result ).css({'display':'inline', 'width':500});
         }
         fr.readAsDataURL(file);
     }

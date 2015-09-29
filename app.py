@@ -1,9 +1,10 @@
 from flask import Flask
-from app.controller import root, add_creative, copy_adset
+from app.controller import root, add_creative, add_carousel, copy_adset
 
 app = Flask(__name__)
 app.register_blueprint(root.app)
 app.register_blueprint(add_creative.app)
+app.register_blueprint(add_carousel.app)
 app.register_blueprint(copy_adset.app)
 
 if __name__ == '__main__':
