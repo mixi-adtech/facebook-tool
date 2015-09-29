@@ -19,16 +19,17 @@ def index():
     return render_template('add_creative.html')
 
 
-@app.route('/add_creative/api/adset/<account>/<target_os>')
-def get_ad_set(account, target_os):
+# referenced add_carousel.py
+@app.route('/add_creative/api/adset/<account>/<target_os>/<objective>')
+def get_ad_set(account, target_os, objective):
 
-    if not _is_get_ad_set_valid(account, target_os):
+    if not _is_get_ad_set_valid(account, target_os, objective):
         abort()
 
     act_id = config['act_id'][account]
     link_url = config['link_url'][account][target_os]
 
-    model = AdSetModel(act_id, link_url)
+    model = AdSetModel(act_id, link_url, objective)
     adset = model.get_ad_set()
     return jsonify(result=adset)
 
@@ -49,12 +50,14 @@ def add():
     return render_template('add_creative.html', error=1)
 
 
-def _is_get_ad_set_valid(account, target_os):
+def _is_get_ad_set_valid(account, target_os, objective):
     if account not in config['act_id']:
         return False
     if account not in config['link_url']:
         return False
     if target_os not in config['link_url'][account]:
+        return False
+    if objective != 'MOBILE_APP_INSTALLS' and objective != 'MOBILE_APP_ENGAGEMENT':
         return False
     return True
 

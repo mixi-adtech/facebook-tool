@@ -19,9 +19,10 @@ FacebookAdsApi.init(
 
 
 class AdSetModel:
-    def __init__(self, act_id, link_url):
+    def __init__(self, act_id, link_url, objective):
         self.act_id = act_id
         self.link_url = link_url.replace('https://', 'http://')
+        self.objective = objective
 
     def get_ad_set(self):
         account = AdAccount(self.act_id)
@@ -61,6 +62,8 @@ class AdSetModel:
             creatives = adset.get_ad_creatives(params={'limit': 50})
             for i in range(0, len(campaigns)):
                 campaign = campaigns[i]
+                if campaign['objective'] != self.objective:
+                    continue
                 if adset['campaign_group_id'] == campaign['id']:
                     ads.append({
                         'id': adset['id'],
