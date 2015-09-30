@@ -17,15 +17,15 @@
 <div class="page-header container">
     <ol class="breadcrumb">
         <li><a href="/">Home</a></li>
-        <li class="active">Add Creative</li>
+        <li class="active">Add Carousel</li>
     </ol>
-    <h1>Facebook Tool <small>Add Creative</small></h1>
+    <h1>Facebook Tool <small>Add Carousel</small></h1>
     <ul class="nav nav-pills">
-        <li role="presentation" class="active"><a href="add_creative">creative</a></li>
-        <li role="presentation"><a href="add_carousel">carousel</a></li>
+        <li role="presentation"><a href="add_creative">creative</a></li>
+        <li role="presentation" class="active"><a href="add_carousel">carousel</a></li>
     </ul>
 </div>
-<form action="/add_creative/add" method="POST" enctype="multipart/form-data">
+<form action="/add_carousel/add" method="POST" enctype="multipart/form-data">
 <div class="container">
     {% if error %}
         <div class="panel panel-danger">
@@ -78,10 +78,6 @@
             <td><input class="form-control" type="text" name="os" id="os" value="" readonly required /></td>
         </tr>
         <tr>
-            <th>見出し</th>
-            <td><input class="form-control" type="text" name="title" id="title" value="" required /></td>
-        </tr>
-        <tr>
             <th>テキスト</th>
             <td><textarea class="form-control" id="message" name="message" rows="4" required></textarea></td>
         </tr>
@@ -112,11 +108,77 @@
             </td>
         </tr>
         <tr>
+            <th>画像の順番</th>
+            <td>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default active">
+                        <input type="radio" name="multi_share_optimized" value="FIXED" checked />FIXED
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="radio" name="multi_share_optimized" value="AUTO" />AUTO
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr class="active"><th>1枠目</th><td></td></tr>
+        <tr class="JS_imageArea">
             <th>画像</th>
             <td>
-                <input type="file" id="filename" name="filename" accept="image/jpeg,image/png,image/gif" required />
-                <img src="" id="preview" style="display:none;" />
+                <input class="filename" type="file" name="filename1" accept="image/jpeg,image/png,image/gif" required />
+                <img src="" class="preview" style="display:none;" />
             </td>
+        </tr>
+        <tr>
+            <th>テキスト</th>
+            <td><input class="form-control" type="text" name="title1" required></td>
+        </tr>
+        <tr class="active"><th>2枠目</th><td></td></tr>
+        <tr class="JS_imageArea">
+            <th>画像</th>
+            <td>
+                <input class="filename" type="file" name="filename2" accept="image/jpeg,image/png,image/gif" required />
+                <img src="" class="preview" style="display:none;" />
+            </td>
+        </tr>
+        <tr>
+            <th>テキスト</th>
+            <td><input class="form-control" type="text" name="title2" required></td>
+        </tr>
+        <tr class="active"><th>3枠目</th><td></td></tr>
+        <tr class="JS_imageArea">
+            <th>画像</th>
+            <td>
+                <input class="filename" type="file" name="filename3" accept="image/jpeg,image/png,image/gif" required />
+                <img src="" class="preview" style="display:none;" />
+            </td>
+        </tr>
+        <tr>
+            <th>テキスト</th>
+            <td><input class="form-control" type="text" name="title3" required></td>
+        </tr>
+        <tr class="active"><th>4枠目 <input type="checkbox" class="JS_checkbox4" value="4" /></th><td></td></tr>
+        <tr class="JS_imageArea JS_slot4" style="display:none;">
+            <th>画像</th>
+            <td>
+                <input class="filename" type="file" name="filename4" accept="image/jpeg,image/png,image/gif" disabled="disabled" required />
+                <img src="" class="preview" style="display:none;" />
+            </td>
+        </tr>
+        <tr class="JS_slot4" style="display:none;">
+            <th>テキスト</th>
+            <td><input class="form-control" type="text" name="title4" disabled="disabled" required></td>
+        </tr>
+        <tr class="active"><th>5枠目 <input type="checkbox" class="JS_checkbox4" value="5" /></th><td></td></tr>
+        <tr class="JS_imageArea JS_slot5" style="display:none;">
+            <th>画像</th>
+            <td>
+                <input class="filename" type="file" name="filename5" accept="image/jpeg,image/png,image/gif" disabled="disabled" required />
+                <img src="" class="preview" style="display:none;" />
+            </td>
+        </tr>
+        <tr class="JS_slot5" style="display:none;">
+            <th>テキスト</th>
+            <td><input class="form-control" type="text" name="title5" disabled="disabled" required></td>
         </tr>
         <tr>
             <th>広告セット</th>
@@ -127,7 +189,8 @@
 </div>
 </form>
 <script type="text/javascript" src="/static/js/select_adset_target.js"></script>
-<script type="text/javascript" src="/static/js/show_preview.js"></script>
+<script type="text/javascript" src="/static/js/show_preview_carousel.js"></script>
+<script type="text/javascript" src="/static/js/show_additional_carousel.js"></script>
 <script type="text/javascript" src="/static/js/select_template.js"></script>
 <script type="text/javascript" src="/static/js/change_objective.js"></script>
 <script type="text/javascript" src="/static/js/change_deeplink.js"></script>

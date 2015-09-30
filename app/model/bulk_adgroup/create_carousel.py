@@ -1,6 +1,6 @@
 from app.common.config import Config
 from facebookads import FacebookAdsApi
-from facebookads.specs import ObjectStorySpec, LinkData
+from facebookads.specs import ObjectStorySpec, LinkData, AttachmentData
 from facebookads.objects import (
     AdImage,
     AdCreative,
@@ -21,41 +21,52 @@ FacebookAdsApi.init(
 )
 
 
-class AdCreativeModel:
-    def __init__(self, param, filename):
+class CarouselAdCreativeModel:
+    def __init__(self, param, attachments):
         self.param = param
-        self.filename = filename
+        self.attachments = attachments
 
-    def create_ad_creative(self):
+    def create_carousel_ad_creative(self):
         parent_id = config['act_id'][self.param['account']]
         page_id = config['page_id'][self.param['account']]
         link_url = config['link_url'][self.param['account']][self.param['os']]
-
-        # Upload an image to an account.
-        img = AdImage(parent_id=parent_id)
-        img[AdImage.Field.filename] = os.path.join(
-            this_dir,
-            '../../../upload/' + self.filename
-        )
-        img.remote_create()
-        print("**** DONE: Image uploaded:")
-        pp.pprint(img)
-        # The image hash can be found using img[AdImage.Field.hash]
 
         # Create link data
         link_data = LinkData()
         link_data[LinkData.Field.link] = link_url
         link_data[LinkData.Field.message] = self.param['message']
-        link_data[LinkData.Field.image_hash] = img.get_hash()
-        call_to_action = {'type': self.param['call_to_action']}
-        call_to_action['value'] = {
-            'link': link_url,
-            'link_title': self.param['title'],
-            'application': config['app_id'][self.param['account']],
-        }
-        if self.param['deeplink_text']:
-            call_to_action['value']['app_link'] = self.param['deeplink_text']
-        link_data[LinkData.Field.call_to_action] = call_to_action
+        multi_share_optimized = False if self.param['multi_share_optimized'] == 'FIXED' else True
+        link_data[LinkData.Field.multi_share_optimized] = multi_share_optimized
+
+        # Create attachment data
+        attachments_data = []
+        for attachment in self.attachments:
+            # Upload an image to an account.
+            img = AdImage(parent_id=parent_id)
+            img[AdImage.Field.filename] = os.path.join(
+                this_dir,
+                '../../../upload/' + attachment['filename']
+            )
+            img.remote_create()
+            print("**** DONE: Image uploaded:")
+            pp.pprint(img)
+            # The image hash can be found using img[AdImage.Field.hash]
+
+            attachment_data = AttachmentData()
+            attachment_data[AttachmentData.Field.link] = link_url
+            attachment_data[AttachmentData.Field.image_hash] = img.get_hash()
+            call_to_action = {'type': self.param['call_to_action']}
+            call_to_action['value'] = {
+                'link': link_url,
+                'link_title': attachment['title'],
+                'application': config['app_id'][self.param['account']],
+            }
+            if self.param['deeplink_text']:
+                call_to_action['value']['app_link'] = self.param['deeplink_text']
+            attachment_data[AttachmentData.Field.call_to_action] = call_to_action
+
+            attachments_data.append(attachment_data)
+        link_data[LinkData.Field.child_attachments] = attachments_data
 
         # Create object story spec
         object_story_spec = ObjectStorySpec()
